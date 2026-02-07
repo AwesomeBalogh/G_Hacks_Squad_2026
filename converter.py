@@ -10,5 +10,8 @@ def geo_to_cart(lat, lon, h):
     Z = (N * (1 - e2) + h) * sin_lat
     return X, Y, Z
 
-
-print(geo_to_cart(37.7749,-122.4194, 0))
+if __name__ == "__main__":
+    la = float(input("Enter latitude: "))
+    lo = float(input("Enter longditude: "))
+    height = float(input("Enter height: "))
+    print(geo_to_cart(la, lo, height))
