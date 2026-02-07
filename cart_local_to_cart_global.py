@@ -52,4 +52,14 @@ def local_cart_to_global(x_local, y_local, z_local, ref_lon, ref_lat, ref_h=0):
     return Xw, Yw, Zw
 
 # Example Calgary
-print(local_cart_to_global(100, 200, 10, -114.07, 51.04))
+if __name__ == "__main__":
+    print("NAD83 Local Cart to WGS84 ECEF")
+    x = float(input("Local X (m): "))
+    y = float(input("Local Y (m): "))
+    z = float(input("Local Z (m): "))
+    lon = float(input("Ref Lon (deg): "))
+    lat = float(input("Ref Lat (deg): "))
+    h = float(input("Ref H (m, default 0): ") or "0")
+    
+    Xw, Yw, Zw = local_cart_to_global(x, y, z, lon, lat, h)
+    print(f"WGS84: X={Xw:.3f}, Y={Yw:.3f}, Z={Zw:.3f} m")
