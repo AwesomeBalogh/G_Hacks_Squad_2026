@@ -1,13 +1,14 @@
-# This will convert cartesian coordinates to geospacial
 import numpy as np
-def geo_to_cart(lat, lon, height):
+def geo_to_cart(lat, lon, h):
     a = 6378137  # WGS84
-    e = 0.00669438
-    # Convert to radians
-    lat_rad, lon_rad = np.radians(lat), np.radians(lon)
+    e2 = 0.00669438
+    lat, lon = np.radians(lat), np.radians(lon)
+    sin_lat, cos_lat = np.sin(lat), np.cos(lat)
+    N = a / np.sqrt(1 - e2 * sin_lat**2)
+    X = (N + h) * cos_lat * np.cos(lon)
+    Y = (N + h) * cos_lat * np.sin(lon)
+    Z = (N * (1 - e2) + h) * sin_lat
+    return X, Y, Z
 
-    N = a / np.sqrt(1 - (e * np.sin(lat_rad)**2))
-    X = (N + height) * np.cos(lat_rad) * np.cos(lon_rad)
-    Y = (N + height) * np.cos(lat_rad) * np.sin(lon_rad)
-    Z = ((N * (1 - e**2)) + height) * np.sin(lat_rad)
-    return [X, Y, Z]
+
+print(geo_to_cart(37.7749,-122.4194, 0))
