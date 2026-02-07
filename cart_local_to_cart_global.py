@@ -1,40 +1,55 @@
-# This will convert a set of cartesian coordinates to the local north american elipse to the global elipse
 import numpy as np
-from pyproj import Transformer, CRS
+import math
+import geo_to_cart
+import cart_to_geo
 
-def local_na_cart_to_global(x_local, y_local, z_local, ref_lon, ref_lat, ref_h=0):
-    """
-    Convert local Cartesian (X,Y,Z) relative to reference point
-    on NAD83 ellipsoid to global WGS84 ECEF Cartesian.
-    
-    Assumes local tangent plane approx valid for small offsets.
-    Uses pyproj for accurate ECEF conversions & NAD83->WGS84 Helmert.
-    
-    Args:
-    x_local, y_local, z_local (float): local ENU or ECEF offsets (m)
-    ref_lon, ref_lat (float): reference lon (deg), lat (deg) in NAD83
-    ref_h (float): reference height (m), default 0
-    
-    Returns:
-    tuple: global X,Y,Z ECEF (m) in WGS84
-    """
-    # NAD83 geographic CRS with Helmert to WGS84
-    nad83_crs = CRS.from_epsg(4269)  # NAD83
-    wgs84_crs = CRS.from_epsg(4978)  # WGS84 ECEF
-    
-    # Transformer: NAD83 geo -> WGS84 ECEF
-    geo_to_ecef = Transformer.from_crs(nad83_crs, wgs84_crs, always_xy=True)
-    
-    # Reference ECEF NAD83 approx (via WGS84 close enough for ref)
-    ref_ecef_x, ref_ecef_y, ref_ecef_z = geo_to_ecef.transform(ref_lon, ref_lat, ref_h)
-    
-    # Local offsets to global (simple translation for small area)
-    x_global = ref_ecef_x + x_local
-    y_global = ref_ecef_y + y_local
-    z_global = ref_ecef_z + z_local
-    
-    return x_global, y_global, z_global
+def deg_to_rad(deg):
+    return deg * math.pi / 180
 
-# Example: Calgary approx ref
-print(local_na_cart_to_global(100, 200, 10, -114.07, 51.04))  # [web:11][web:13][web:21]
+def local_cart_to_geo_ecef(x_e, y_e, z_e, ref_lon, ref_lat, ref_h, a=6378137, f=1/298.257223563):
+    """Local Cartesian offsets (m) to full ECEF on same ellipsoid.
+    Assumes small offsets; approx via ref ECEF translation."""
+
+    ref_X, ref_Y, ref_Z = geo_to_cart.geo_to_cart(ref_lat, ref_lon, ref_h)
+    X = ref_X + x_e
+    Y = ref_Y + y_e
+    Z = ref_Z + z_e
+    return X, Y, Z
+
+def helmert_transform(XYZ_in, tx, ty, tz, rx, ry, rz, s):
+    """7-param Helmert: NAD83 ECEF -> WGS84 ECEF (m, arcsec, ppm)."""
+
+    XYZ = np.array(XYZ_in)
+    R = np.array([
+        [1,     rz*math.pi/648000, -ry*math.pi/648000],
+        [-rz*math.pi/648000, 1,     rx*math.pi/648000],
+        [ry*math.pi/648000, -rx*math.pi/648000, 1]
+    ])  # Rotation matrix (arcsec to rad)
+    scale_mat = np.eye(3) * (1 + s / 1e6)
+    XYZ_out = np.dot(scale_mat @ R, XYZ) + np.array([tx, ty, tz])
+    return XYZ_out
+
+def local_cart_to_global(x_local, y_local, z_local, ref_lon, ref_lat, ref_h=0):
+    """
+    Local Cartesian (X,Y,Z m) on NAD83 (GRS80) to global WGS84 ECEF.
+    NAD83 params from NGS; ~1m accuracy.[web:21]
+    """
+    # GRS80 (NAD83): a=6378137m, f=1/298.257222101
+    a_grs80, f_grs80 = 6378137.0, 1/298.257222101
+    ref_Xn, ref_Yn, ref_Zn = geo_to_cart.geo_to_cart(ref_lat, ref_lon, ref_h)
     
+    # Local offsets to NAD83 ECEF
+    Xn = ref_Xn + x_local
+    Yn = ref_Yn + y_local
+    Zn = ref_Zn + z_local
+    
+    # Helmert params NAD83(2011)->WGS84(G2139) approx (NGS historical)
+    tx, ty, tz = 0.000, 0.000, 1.310  # m
+    rx, ry, rz = 0.060, 0.000, 0.010  # arcsec
+    s = -0.89  # ppm
+    
+    Xw, Yw, Zw = helmert_transform([Xn, Yn, Zn], tx, ty, tz, rx, ry, rz, s)
+    return Xw, Yw, Zw
+
+# Example Calgary
+print(local_cart_to_global(100, 200, 10, -114.07, 51.04))
