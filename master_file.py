@@ -63,7 +63,7 @@ P_neu = global_to_local.global_cart_to_local(
 
 E_neu = Clue_4.pointE_from_pointD(D_neu, P_neu)
 E = local_to_global.local_to_global_cart(
-    E_neu[0], E_neu[1], E_neu[2], D_geo[0], D_geo[1], D_geo[2]
+    E_neu[0], E_neu[1], E_neu[2], A_geo[0], A_geo[1], A_geo[2]
 )
 E_geo = global_cart_to_geo.cartesian_to_geodetic(E[0], E[1], E[2])
 print(f"E is {E_geo}")
