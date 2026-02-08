@@ -9,6 +9,15 @@ import Clue_4
 import Clue_5
 import Clue_6
 
+""" A is [51.07899643518, -114.13251416136, 1114.2977]
+B is (51.077963288741124, -114.13169186367365, 1110.5887405816466)
+C is (51.07687585204031, -114.13226076202659, 1110.0447396095842)
+D is (51.07701380253775, -114.13413562901339, 1108.4798089712858)
+E is (51.07639669712619, -114.1414632677614, 1014.1181672858074)
+F is (51.07594596475162, -114.1389599393581, 1049.9557840293273)
+G is (51.07946410528815, -114.13541318297094, 1118.113786187023) """
+
+
 # BESTPOSA,USB1,0,51.5,FINESTEERING,2404,603797.000,03000800,cdba,18018;SOL_COMPUTED,NARROW_INT,51.07899643518,-114.13251416136,1114.2977,-16.6000,WGS84,0.0079,0.0056,0.0141,"3920",1.000,0.000,34,31,31,30,00,21,7f,37*a5cec5c7
 print("Paste log line: ")
 print("NOTE: You need to press Ctrl+Z (Ctrl+D on linux) to continue instead of enter")
@@ -54,7 +63,6 @@ D_offset = D - A_cart
 D_neu = global_to_local.global_cart_to_local(
     D_offset[0], D_offset[1], D_offset[2], A_geo[0], A_geo[1], A_geo[2]
 )
-print(D_neu)
 
 p_neu_offset = [-505.2385, 36.3253, 0]
 p_cart_offset = local_to_global.local_to_global_cart(
@@ -66,7 +74,6 @@ P_neu = global_to_local.global_cart_to_local(
     P[0], P[1], P[2], A_geo[0], A_geo[1], A_geo[2]
 )
 
-print(D_neu)
 E_neu = Clue_4.E2D(D_neu, p_neu_offset)
 E_global_offset = local_to_global.local_to_global_cart(
     E_neu[0], E_neu[1], E_neu[2], A_geo[0], A_geo[1], A_geo[2]
