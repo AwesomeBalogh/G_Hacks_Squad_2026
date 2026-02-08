@@ -11,9 +11,9 @@ def cartesian_sphere(D, F):
     delta_h = (d[0] - f[0])
     delta_k = (d[1] - f[1])
 
-    t = np.arcsin((delta_h + delta_k) / (2**0.5(fg + dg)) - numpy.pi / 4 
+    t = np.arcsin((delta_h + delta_k) / (2**0.5(fg + dg)) - numpy.pi / 4 )
 
-    G = numpy.array((d[0] + dg * (numpy.cos(t)), d[1] * (numpy.sin(t))
+    G = np.array((d[0] + dg * (numpy.cos(t)), d[1] * (numpy.sin(t))))
 
     return G 
 
