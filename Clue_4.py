@@ -11,19 +11,23 @@ def pointE_from_pointD(D):
 
     Returns: (EE, NE, UE)
     """
+    northing_easting = [-505.2385, 36.3253]
+    bearing_DE = 246.102478
+    deltaU_DE = 1.1277  # meters
+
     ND = D[0]
     ED = D[1]
     UD = D[2]
 
-    NP = ND -505.2385  # P's Northing
-    EP = ED + 36.3253  # P's Easting
-    thetaD = np.radians(246.102478) # bearing D->E in radians
+    northed_p = ND + northing_easting[0] # P's Northing
+    easted_p = ED +  northing_easting[1] # P's Easting
+
+    thetaD = np.radians(bearing_DE) # bearing D->E in radians
     thetaP = np.radians((139.361144 + 180.0) % 360.0) # bearing P->E in radians
-    deltaU_DE = 1.1277  # meters
 
     # Differences from D to P in local East/North
-    dE = EP - ED
-    dN = NP - ND
+    dE = easted_p - ED
+    dN = northed_p - ND
 
     # Calculate t (the scalar to reach E from D along bearing DE)
     t = (dE * np.cos(thetaP) - dN * np.sin(thetaP)) / (np.sin(thetaD - thetaP))
