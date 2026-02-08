@@ -7,7 +7,7 @@ def bearing_to_enu(bearing_deg, distance, delta_h):
     dE = distance * np.sin(theta)
     dU = delta_h
 
-    return np.array([dE, dN, dU])
+    return np.array([dN, dE, dU])
 
 deg = float(input("Enter the bearing in degrees: "))
 dist = float(input("Enter the distance: "))
