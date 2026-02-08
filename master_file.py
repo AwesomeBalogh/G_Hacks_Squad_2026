@@ -43,7 +43,7 @@ print(f"C is {C}")
 
 Clue_3 = [15.3513, -131.4161, -1.5663]
 C_geo = global_cart_to_geo.cartesian_to_geodetic(C[0], C[1], C[2])
-D = local_to_global.local_to_global_cart(
+D_offset_cart = local_to_global.local_to_global_cart(
     Clue_3[0],
     Clue_3[1],
     Clue_3[2],
@@ -51,4 +51,6 @@ D = local_to_global.local_to_global_cart(
     C_geo[1],
     C_geo[2]
 )
+D = C + D_offset_cart
 print(f"D is {D}")
+
