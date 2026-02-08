@@ -8,7 +8,7 @@ def geo_to_cart(lat, lon, h):
     X = (N + h) * cos_lat * np.cos(lon)
     Y = (N + h) * cos_lat * np.sin(lon)
     Z = (N * (1 - e2) + h) * sin_lat
-    return X, Y, Z
+    return [float(X), float(Y), float(Z)]
 
 if __name__ == "__main__":
     la = float(input("Enter latitude: "))
