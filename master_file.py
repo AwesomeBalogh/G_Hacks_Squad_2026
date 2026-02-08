@@ -48,7 +48,7 @@ D_geo = global_cart_to_geo.cartesian_to_geodetic(
 print(f"D is {D_geo}")
 
 D_neu = global_to_local.global_cart_to_local(
-    D[0], D[1], D[2], D_geo[0], D_geo[1], D_geo[2]
+    D[0], D[1], D[2], A_geo[0], A_geo[1], A_geo[2]
 )
 
 p_neu_offset = [-505.2385, 36.3253, 0]
@@ -58,12 +58,15 @@ p_cart_offset = local_to_global.local_to_global_cart(
 P = p_cart_offset + A_cart
 P_geo = global_cart_to_geo.cartesian_to_geodetic(P[0], P[1], P[2])
 P_neu = global_to_local.global_cart_to_local(
-    P[0], P[1], P[2], D_geo[0], D_geo[1], D_geo[2]
+    P[0], P[1], P[2], A_geo[0], A_geo[1], A_geo[2]
 )
-
-E_neu = Clue_4.pointE_from_pointD(D_neu, P_neu)
+print(P_neu)
+print(D_neu)
+E_neu = Clue_4.E2D(D_neu, P_neu)
 E = local_to_global.local_to_global_cart(
     E_neu[0], E_neu[1], E_neu[2], A_geo[0], A_geo[1], A_geo[2]
 )
 E_geo = global_cart_to_geo.cartesian_to_geodetic(E[0], E[1], E[2])
 print(f"E is {E_geo}")
+
+
