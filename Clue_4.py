@@ -1,74 +1,35 @@
 import numpy as np
 
-
-def pointE_from_pointD(D, P):
-    """
-    Solve Point E from:
-      - Point D (ED, ND, UD)
-      - Point P (EP, NP)
-      - bearing D->E (deg, clockwise from North)
-      - bearing E->P (deg, clockwise from North)
-      - deltaU from D->E (meters)
-
-    Returns: (EE, NE, UE)
-    """
-    northing_easting = [-505.2385, 36.3253]
-    bearing_DE = 246.102478
-    deltaU_DE = 1.1277  # meters
-
-    ND = D[0]
-    ED = D[1]
-    UD = D[2]
-
-    northed_p = P[0]  # P's Northing
-    easted_p = P[1]  # P's Easting
-
-    thetaD = np.radians(bearing_DE)  # bearing D->E in radians
-    thetaP = np.radians(139.361144)
-
-    # Differences from D to P in local East/North
-    dE = easted_p - ED
-    dN = northed_p - ND
-
-    # Calculate t (the scalar to reach E from D along bearing DE)
-    # t = (dE * np.cos(thetaP) - dN * np.sin(thetaP)) / (np.sin(thetaD - thetaP))
-    t = (np.sin(thetaP) * dN - np.cos(thetaP) * dE) / (
-        np.sin(thetaP) * np.cos(thetaD) - np.cos(thetaP) * np.sin(thetaD)
-    )
-    # Compute E's horizontal coordinates from point D
-    EE = ED + t * np.sin(thetaD)
-    NE = ND + t * np.cos(thetaD)
-
-    # Apply vertical change
-    UE = UD + deltaU_DE
-    NEU_POINTE = np.array([NE, EE, UE])
-    return NEU_POINTE
-
-
-def E2D(D, P):
+def E2D(D_offset_a, P_offset_a):
     bearingDE = np.radians(246.102478)
     bearingEP = np.radians(139.361144)
     h = 1.1277
     p_easting = 36.3253
     p_northing = -505.2385
 
-    dw = P[0] - D[0]
-    pw = P[1] - D[1]
-    pd = np.sqrt(dw**2 + pw**2)
-    print("pd:", pd)
-    theta_p = np.arctan2(pw, pd)
-    beta = np.pi - (np.pi / 2) - theta_p
+    dw = P_offset_a[1] - D_offset_a[1]  # delta Easting (x direction)
+    pw = P_offset_a[0] - D_offset_a[0]  # delta Northing (y direction)
+    pd = np.sqrt(dw**2 + pw**2)         #distance betweeen flat P and D
+    theta_p = np.arctan2(dw, pw)        #angle DPW in radians
+    beta = np.pi - (np.pi / 2) - theta_p    #agle WDP in radians
 
-    c = bearingDE - (np.pi / 2) - beta
-    q = (2 * np.pi) - bearingEP - theta_p
-    omega = (np.pi) - c - q
+    c = bearingDE - (np.pi / 2) - beta  #angle EDP in radians
+    q = (2 * np.pi) - bearingEP - theta_p   #angle EPD in radians
+    omega = (np.pi) - c - q         #angle DEP in radians
 
-    b = np.sin(q) * (pd / np.sin(omega))
-    fish = np.sqrt(b**2 - h**2)
-    N = fish * np.sin(np.pi - bearingDE)
-    E = fish * np.cos(np.pi - bearingDE)
-    U = h
-    return [N, E, U]
+    b = np.sin(q) * (pd / np.sin(omega))    #distance between flat D and flat E
+    iota = 2*np.pi - bearingDE - np.pi/2
+    Easting_EtoD_offset = np.cos(iota) * b
+    Northing_EtoD_offset = np.sin(iota) * b
+    
+    offset_etod = [Northing_EtoD_offset, Easting_EtoD_offset, h]
+
+    a_to_e = offset_etod + D_offset_a
+
+    North = a_to_e[0]
+    East = a_to_e[1]
+    Up = a_to_e[2]
+    return [North, East, Up]
 
 
 # Example usage (replace with your real numbers)
