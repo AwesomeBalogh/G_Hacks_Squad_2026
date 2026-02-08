@@ -1,6 +1,7 @@
 import sys
 import parser
 import geo_to_global_cart
+import global_cart_to_geo
 import local_bearing_to_enu
 import local_to_global
 
@@ -40,4 +41,13 @@ Clue_2 = [-74.7377, -69.2944, -76.4427]
 C = B + Clue_2 
 print(f"C is {C}")
 
-
+Clue_3 = [15.3513, -131.4161, -1.5663]
+C_geo = global_cart_to_geo.cartesian_to_geodetic(C[0], C[1], C[2])
+D = local_to_global(
+    Clue_3[0],
+    Clue_3[1],
+    Clue_3[2],
+    C_geo[0],
+    C_geo[1],
+    C_geo[2]
+)
