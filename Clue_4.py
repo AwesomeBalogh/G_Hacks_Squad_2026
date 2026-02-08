@@ -55,7 +55,7 @@ def E2D(D, P):
     dw = P[0] - D[0]
     pw = P[1] - D[1]
     pd = np.sqrt(dw**2 + pw**2)
-
+    print("pd:", pd)
     theta_p = np.arctan2(pw, pd)
     beta = np.pi - (np.pi / 2) - theta_p
 
@@ -75,4 +75,4 @@ def E2D(D, P):
 if __name__ == "__main__":
     D = [1718425.41502, -3278870.9388, 5179417.611987]
     P = [-505.2385, 36.3253, 0]  # Example P coordinates
-    print("Point E Coordinates (N, E, U):", pointE_from_pointD(D, P))
+    print("Point E Coordinates (N, E, U):", E2D(D, P))

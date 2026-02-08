@@ -22,9 +22,9 @@ def local_to_global_cart(N, E, U, phi, lamda, h):
 
 if __name__ == "__main__":
     # Example usage (replace with your real numbers)
-    N =  -114.9570891 # meters
-    E = 57.63661089   # meters
-    U = -3.7103   # meters
+    N =  -173.0503321044 # meters
+    E = -68.0544266747   # meters
+    U = -3.6288   # meters
     phi = 51.07899643518     # degrees
     lamda = -114.13251416136  # degrees
     h = 1114.2977      # meters
