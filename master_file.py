@@ -4,6 +4,7 @@ import geo_to_global_cart
 import global_cart_to_geo
 import local_bearing_to_enu
 import local_to_global
+import global_to_local
 
 #BESTPOSA,USB1,0,51.5,FINESTEERING,2404,603797.000,03000800,cdba,18018;SOL_COMPUTED,NARROW_INT,51.07899643518,-114.13251416136,1114.2977,-16.6000,WGS84,0.0079,0.0056,0.0141,"3920",1.000,0.000,34,31,31,30,00,21,7f,37*a5cec5c7
 print("Paste log line: ")
@@ -33,7 +34,6 @@ B_offset_cart = local_to_global.local_to_global_cart(
     A_geo[1],
     A_geo[2]
 )
-print(B_offset_cart)
 B = B_offset_cart + A_cart
 print(f"B is {B}")
 
@@ -54,3 +54,16 @@ D_offset_cart = local_to_global.local_to_global_cart(
 D = C + D_offset_cart
 print(f"D is {D}")
 
+D_geo = global_cart_to_geo.cartesian_to_geodetic(
+    D[0],
+    D[1],
+    D[2],
+)
+D_neu = global_to_local.global_cart_to_local(
+    D[0],
+    D[1],
+    D[2],
+    D_geo[0],
+    D_geo[1],
+    D_geo[2]
+)
