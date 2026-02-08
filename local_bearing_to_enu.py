@@ -9,8 +9,9 @@ def bearing_to_enu(bearing_deg, distance, delta_h):
 
     return np.array([dN, dE, dU])
 
-deg = float(input("Enter the bearing in degrees: "))
-dist = float(input("Enter the distance: "))
-delta_h = float(input("Enter the change in height (optional, default is 0): "))
-enu_vector = bearing_to_enu(deg, dist, delta_h)
-print("ENU Vector:", enu_vector)
+if __name__ == "__main__":
+    deg = float(input("Enter the bearing in degrees: "))
+    dist = float(input("Enter the distance: "))
+    delta_h = float(input("Enter the change in height (optional, default is 0): "))
+    enu_vector = bearing_to_enu(deg, dist, delta_h)
+    print("ENU Vector:", enu_vector)
