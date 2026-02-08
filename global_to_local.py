@@ -6,8 +6,8 @@ import global_cart_to_geo as c2g
 def global_cart_to_local(X, Y, Z):
     # Build nupmy array
     geo = c2g.cartesian_to_geodetic(X, Y, Z)
-    phi = geo[0]
-    lamda = geo[1]
+    phi = np.radians(geo[0])
+    lamda = np.radians(geo[1])
     h = geo[2]
     global_cart = np.array([X, Y, Z])
 
@@ -18,7 +18,7 @@ def global_cart_to_local(X, Y, Z):
     rotation_matrix = [rotation1, rotation2, rotation3]
 
     # Multiply the global cartesian vector by the rotation matrix
-    local_cart = np.matmul(global_cart, rotation_matrix)
+    local_cart = np.matmul(rotation_matrix, global_cart)
     return local_cart
 
 
