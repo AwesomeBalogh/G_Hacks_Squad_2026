@@ -1,6 +1,7 @@
 import numpy as np
 
-def pointE_from_pointD(D):
+
+def pointE_from_pointD(D, P):
     """
     Solve Point E from:
       - Point D (ED, ND, UD)
@@ -19,19 +20,21 @@ def pointE_from_pointD(D):
     ED = D[1]
     UD = D[2]
 
-    northed_p = ND + northing_easting[0] # P's Northing
-    easted_p = ED +  northing_easting[1] # P's Easting
+    northed_p = P[0]  # P's Northing
+    easted_p = P[1]  # P's Easting
 
-    thetaD = np.radians(bearing_DE) # bearing D->E in radians
+    thetaD = np.radians(bearing_DE)  # bearing D->E in radians
     thetaP = np.radians(139.361144)
-    
+
     # Differences from D to P in local East/North
     dE = easted_p - ED
     dN = northed_p - ND
 
     # Calculate t (the scalar to reach E from D along bearing DE)
-    #t = (dE * np.cos(thetaP) - dN * np.sin(thetaP)) / (np.sin(thetaD - thetaP))
-    t = (dE * np.cos(thetaP) - dN * np.sin(thetaP)) / (np.sin(thetaD - thetaP))
+    # t = (dE * np.cos(thetaP) - dN * np.sin(thetaP)) / (np.sin(thetaD - thetaP))
+    t = (np.sin(thetaP) * dN - np.cos(thetaP) * dE) / (
+        np.sin(thetaP) * np.cos(thetaD) - np.cos(thetaP) * np.sin(thetaD)
+    )
     # Compute E's horizontal coordinates from point D
     EE = ED + t * np.sin(thetaD)
     NE = ND + t * np.cos(thetaD)
@@ -40,6 +43,7 @@ def pointE_from_pointD(D):
     UE = UD + deltaU_DE
     NEU_POINTE = np.array([NE, EE, UE])
     return NEU_POINTE
+
 
 def E2D(D, P):
     bearingDE = np.radians(246.102478)
@@ -67,9 +71,8 @@ def E2D(D, P):
     return [N, E, U]
 
 
-
 # Example usage (replace with your real numbers)
 if __name__ == "__main__":
     D = [1718425.41502, -3278870.9388, 5179417.611987]
-    print ("Point E Coordinates (N, E, U):", pointE_from_pointD(D))
-
+    P = [-505.2385, 36.3253, 0]  # Example P coordinates
+    print("Point E Coordinates (N, E, U):", pointE_from_pointD(D, P))
