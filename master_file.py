@@ -47,6 +47,7 @@ D_geo = global_cart_to_geo.cartesian_to_geodetic(
     D[2],
 )
 print(f"D is {D_geo}")
+print(D)
 
 D_neu = global_to_local.global_cart_to_local(
     D[0], D[1], D[2], A_geo[0], A_geo[1], A_geo[2]

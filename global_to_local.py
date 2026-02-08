@@ -21,13 +21,19 @@ def global_cart_to_local(X, Y, Z, phi, lamda, h):
 
 if __name__ == "__main__":
     print("What are the global cartesian coordinates? (X, Y, Z)")
-    x = -1641978.390391
-    y = -3665188.388156
-    z = 4939702.5859049
+    x = 6378137.0
+    y = 0.0
+    z = 0.0
+
+    #x = -1641978.390391
+    #y = -3665188.388156
+    #z = 4939702.5859049
     #g = c2g.cartesian_to_geodetic(x, y, z)
-    g= [51.078996, -114.132514, 1114.49]
+    #g= [51.078996, -114.132514, 1114.49]
+    g = [0,0,0]
     p = np.radians(g[0])
     l = np.radians(g[1])
     h = g[2]
     local = global_cart_to_local(x, y, z, p, l, h)
+    print("The local cartesian coordinates are:")
     print(local)
