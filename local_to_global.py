@@ -15,8 +15,6 @@ def local_to_global_cart(N, E, U, phi, lamda, h):
     rotation_matrix = np.transpose([rotation1, rotation2, rotation3])
 
     # Multiply the global cartesian vector by the rotation matrix
-    print(rotation_matrix)
-    print(global_cart)
     local_cart = np.matmul(rotation_matrix, global_cart)
     return local_cart
 
