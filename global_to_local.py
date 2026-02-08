@@ -3,12 +3,8 @@ import numpy.matlib
 import geo_to_global_cart as g2c
 import global_cart_to_geo as c2g
 
-def global_cart_to_local(X, Y, Z):
+def global_cart_to_local(X, Y, Z, phi, lamda, h):
     # Build nupmy array
-    geo = c2g.cartesian_to_geodetic(X, Y, Z)
-    phi = np.radians(geo[0])
-    lamda = np.radians(geo[1])
-    h = geo[2]
     global_cart = np.array([X, Y, Z])
 
     # Build rotation matrix
@@ -24,5 +20,12 @@ def global_cart_to_local(X, Y, Z):
 
 if __name__ == "__main__":
     print("What are the global cartesian coordinates? (X, Y, Z)")
-    cart = global_cart_to_local(float(input("Input X: ")), float(input("Input Y: ")), float(input("Input Z: ")))
+    x = float(input("Input X: "))
+    y = float(input("Input Y: "))
+    z = float(input("Input Z: "))
+    g = c2g.cartesian_to_geodetic(X, Y, Z)
+    p = np.radians(g[0])
+    l = np.radians(g[1])
+    h = g[2]
+    cart = global_cart_to_local(x, y, z, p, l, h)
     print(cart)
