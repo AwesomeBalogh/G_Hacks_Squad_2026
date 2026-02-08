@@ -5,6 +5,7 @@ import global_cart_to_geo
 import local_bearing_to_enu
 import local_to_global
 import global_to_local
+import Clue_4
 
 #BESTPOSA,USB1,0,51.5,FINESTEERING,2404,603797.000,03000800,cdba,18018;SOL_COMPUTED,NARROW_INT,51.07899643518,-114.13251416136,1114.2977,-16.6000,WGS84,0.0079,0.0056,0.0141,"3920",1.000,0.000,34,31,31,30,00,21,7f,37*a5cec5c7
 print("Paste log line: ")
@@ -67,3 +68,14 @@ D_neu = global_to_local.global_cart_to_local(
     D_geo[1],
     D_geo[2]
 )
+
+E_neu = Clue_4.pointE_from_pointD(D_neu)
+E = local_to_global.local_to_global_cart(
+    E_neu[0],
+    E_neu[1],
+    E_neu[2],
+    D_geo[0],
+    D_geo[1],
+    D_geo[2]
+)
+print(f"E is {E}")
