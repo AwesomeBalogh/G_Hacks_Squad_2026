@@ -6,6 +6,7 @@ import local_bearing_to_enu
 import local_to_global
 import global_to_local
 import Clue_4
+import Clue_5
 
 # BESTPOSA,USB1,0,51.5,FINESTEERING,2404,603797.000,03000800,cdba,18018;SOL_COMPUTED,NARROW_INT,51.07899643518,-114.13251416136,1114.2977,-16.6000,WGS84,0.0079,0.0056,0.0141,"3920",1.000,0.000,34,31,31,30,00,21,7f,37*a5cec5c7
 print("Paste log line: ")
@@ -68,5 +69,12 @@ E = local_to_global.local_to_global_cart(
 )
 E_geo = global_cart_to_geo.cartesian_to_geodetic(E[0], E[1], E[2])
 print(f"E is {E_geo}")
+
+F_legacy_local_offset = [-151.2606, 33.6304, -3.6288]
+
+F_offset = Clue_5.transformation(F_legacy_local_offset)
+F = E + F_offset
+F_geo = global_cart_to_geo.cartesian_to_geodetic(F[0], F[1], F[2])
+print(f"F is {F_geo}")
 
 
