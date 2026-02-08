@@ -18,7 +18,7 @@ A_geo = [
     float(parser.get_log_data("height", data))
 ]
 A_cart = geo_to_global_cart.geo_to_cart(A_geo[0], A_geo[1], A_geo[2])
-print(f"A is {A_cart}")
+print(f"A is {A_geo}")
 
 # Clue 1 in bearing, distance, and delta h
 Clue_1 = [153.371958, 128.5967, -3.7103] 
@@ -36,14 +36,15 @@ B_offset_cart = local_to_global.local_to_global_cart(
     A_geo[2]
 )
 B = B_offset_cart + A_cart
-print(f"B is {B}")
+B_geo = global_cart_to_geo.cartesian_to_geodetic(B[0], B[1], B[2])
+print(f"B is {B_geo}")
 
 Clue_2 = [-74.7377, -69.2944, -76.4427]
 C = B + Clue_2 
-print(f"C is {C}")
+C_geo = global_cart_to_geo.cartesian_to_geodetic(C[0], C[1], C[2])
+print(f"C is {C_geo}")
 
 Clue_3 = [15.3513, -131.4161, -1.5663]
-C_geo = global_cart_to_geo.cartesian_to_geodetic(C[0], C[1], C[2])
 D_offset_cart = local_to_global.local_to_global_cart(
     Clue_3[0],
     Clue_3[1],
@@ -53,17 +54,37 @@ D_offset_cart = local_to_global.local_to_global_cart(
     C_geo[2]
 )
 D = C + D_offset_cart
-print(f"D is {D}")
-
 D_geo = global_cart_to_geo.cartesian_to_geodetic(
     D[0],
     D[1],
     D[2],
 )
+print(f"D is {D_geo}")
+
 D_neu = global_to_local.global_cart_to_local(
     D[0],
     D[1],
     D[2],
+    D_geo[0],
+    D_geo[1],
+    D_geo[2]
+)
+
+p_neu_offset = [-505.2385, 36.3253, 0]
+p_cart_offset = local_to_global.local_to_global_cart(
+    p_neu_offset[0],
+    p_neu_offset[1],
+    p_neu_offset[2],
+    A_geo[0],
+    A_geo[1],
+    A_geo[2]
+)
+P = p_cart_offset + A_cart
+P_geo = global_cart_to_geo.cartesian_to_geodetic(P[0], P[1], P[2])
+P_neu = global_to_local.global_cart_to_local(
+    P[0],
+    P[1],
+    P[2],
     D_geo[0],
     D_geo[1],
     D_geo[2]
@@ -78,4 +99,5 @@ E = local_to_global.local_to_global_cart(
     D_geo[1],
     D_geo[2]
 )
-print(f"E is {E}")
+E_geo = global_cart_to_geo.cartesian_to_geodetic(E[0], E[1], E[2])
+print(f"E is {E_geo}")
