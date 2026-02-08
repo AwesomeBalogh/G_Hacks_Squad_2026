@@ -81,14 +81,25 @@ F_offset = Clue_5.transformation(F_legacy_local_offset)
 F = E + F_offset
 F_geo = global_cart_to_geo.cartesian_to_geodetic(F[0], F[1], F[2])
 print(f"F is {F_geo}")
-F_global_offset = F - A
+F_global_offset = F - A_cart
 F_neu = global_to_local.global_cart_to_local(
     F_global_offset[0], 
     F_global_offset[1],
     F_global_offset[2],
-    A[0],
-    A[1],
-    A[2]
+    A_geo[0],
+    A_geo[1],
+    A_geo[2]
 )
 
 G_neu = Clue_6.cartesian_sphere(D_neu, F_neu)
+G_global_cart_offset = local_to_global.local_to_global_cart(
+    G_neu[0],
+    G_neu[1],
+    G_neu[2],
+    A_geo[0],
+    A_geo[1],
+    A_geo[2]
+)
+G_global_cart = A_cart + G_global_cart_offset
+G_geo = global_cart_to_geo.cartesian_to_geodetic(G_global_cart[0], G_global_cart[1], G_global_cart[2])
+print(f"G is {G_geo}")
