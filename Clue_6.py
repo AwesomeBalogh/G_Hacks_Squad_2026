@@ -1,12 +1,10 @@
 import numpy as np 
 
-def cartesian_sphere():
+def cartesian_sphere(D, F):
     fg = 126.6901
     dg = 168.5144
     u = 3.8126
 
-    d = (1712018.966, -328266.81849, 5179160.122)
-    f = (, , ,) 
     fd = np.array(f - d)
     mag_fd = np.linalg.norm(fd)
 
