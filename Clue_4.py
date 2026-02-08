@@ -1,6 +1,6 @@
 import numpy as np
 
-def pointE_from_pointD(D, P, bearing_DE_deg, bearing_EP_deg, deltaU_DE):
+def pointE_from_pointD(D):
     """
     Solve Point E from:
       - Point D (ED, ND, UD)
@@ -11,50 +11,35 @@ def pointE_from_pointD(D, P, bearing_DE_deg, bearing_EP_deg, deltaU_DE):
 
     Returns: (EE, NE, UE)
     """
-    ED, ND, UD = D
-    EP, NP = P
+    ND = D[0]
+    ED = D[1]
+    UD = D[2]
 
-    # Convert bearings to radians
-    thetaD = np.radians(bearing_DE_deg)
-
-    # Convert E->P bearing to P->E bearing by adding 180 degrees
-    thetaP = np.radians((bearing_EP_deg + 180.0) % 360.0)
+    NP = ND -505.2385  # P's Northing
+    EP = ED + 36.3253  # P's Easting
+    thetaD = np.radians(246.102478) # bearing D->E in radians
+    thetaP = np.radians((139.361144 + 180.0) % 360.0) # bearing P->E in radians
+    deltaU_DE = 1.1277  # meters
 
     # Differences from D to P in local East/North
     dE = EP - ED
     dN = NP - ND
 
-    # Solve for t (distance along D->E ray)
-    denom = np.sin(thetaD - thetaP)
-    if abs(denom) < 1e-12:
-        raise ValueError("Bearings are parallel or nearly parallel; no stable intersection.")
-
-    t = (dE * np.cos(thetaP) - dN * np.sin(thetaP)) / denom
+    # Calculate t (the scalar to reach E from D along bearing DE)
+    t = (dE * np.cos(thetaP) - dN * np.sin(thetaP)) / (np.sin(thetaD - thetaP))
 
     # Compute E's horizontal coordinates from point D
     EE = ED + t * np.sin(thetaD)
     NE = ND + t * np.cos(thetaD)
 
-    # Apply vertical change last
+    # Apply vertical change
     UE = UD + deltaU_DE
-
-    return EE, NE, UE
+    NEU_POINTE = np.array([NE, EE, UE])
+    return NEU_POINTE
 
 
 # Example usage (replace with your real numbers)
 if __name__ == "__main__":
-    # Point D (E, N, U)
-    D = (0.0, 0.0, 0.0)  # <-- replace
+    D = [1718425.41502, -3278870.9388, 5179417.611987]
+    print ("Point E Coordinates (N, E, U):", pointE_from_pointD(D))
 
-    # Point P (E, N)
-    P = (36.3253, -505.2385)
-
-    bearing_DE = 246.102478  # deg
-    bearing_EP = 139.361144  # deg
-    deltaU_DE = 1.1277       # m
-
-    EE, NE, UE = pointE_from_pointD(D, P, bearing_DE, bearing_EP, deltaU_DE)
-    print("Point E:")
-    print(f"E = {EE:.4f} m")
-    print(f"N = {NE:.4f} m")
-    print(f"U = {UE:.4f} m")
