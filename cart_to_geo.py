@@ -36,15 +36,3 @@ def cartesian_to_geodetic(x, y, z):
 
     return lat, lon, h
 
-int_input = input("Enter x coordinate: ")
-x = float(int_input)
-int_input = input("Enter y coordinate: ")   
-y = float(int_input)
-int_input = input("Enter z coordinate: ")
-z = float(int_input)
-
-latitude, longitude, height = cartesian_to_geodetic(x, y, z)
-print(f"Latitude: {latitude:.6f} degrees")
-print(f"Longitude: {longitude:.6f} degrees")
-print(f"Height: {height:.2f} meters")
-
